@@ -406,7 +406,7 @@ const GeneratorPage = () => {
     )
       return;
     const encoded = encodeURIComponent(text);
-    window.open(`https://chat.openai.com/?q=${encoded}`, "_blank");
+    window.open(`https://z.ai/?q=${encoded}`, "_blank");
   };
 
   /* ── reset ── */
