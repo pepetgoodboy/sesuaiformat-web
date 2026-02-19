@@ -24,6 +24,10 @@ export const themeOverrideOptions = [
   ['Default', 'Default (Ikuti Gaya Desain)'], ['Light', 'Force Light Mode (Terang)'], ['Dark', 'Force Dark Mode (Gelap)'],
 ];
 
+export const shortThemeOverrideOptions = [
+  ['Default', 'Default'], ['Light', 'Light'], ['Dark', 'Dark'],
+];
+
 // ==================== LANDING PAGE OPTIONS ====================
 export const frameworkOptions = [
   ['A. Conversion Focused', [['AIDCA (Attention–Interest–Desire–Conviction–Action)', 'AIDCA'], ['PAS (Problem–Agitate–Solution)', 'PAS (Problem–Agitate–Solution)'], ['BAB (Before–After–Bridge)', 'BAB (Before–After–Bridge)'], ['4P (Promise–Picture–Proof–Push)', '4P (Promise–Picture–Proof–Push)'], ['SLAP (Stop–Look–Act–Purchase)', 'SLAP (Stop–Look–Act–Purchase)']]],
@@ -91,7 +95,9 @@ export const heroTypeOptions = [
 ];
 
 export const lpSectionItems = [
-  'Social Proof', 'Testimonial', 'FAQ', 'Bonus', 'Guarantee', 'Scarcity', 'Comparison', 'Pricing Table', 'Timeline', 'Team',
+  ['Social Proof', 'Social Proof'], ['Testimonial', 'Testimonial'], ['FAQ', 'FAQ'], ['Bonus', 'Bonus'],
+  ['Guarantee', 'Guarantee'], ['Scarcity', 'Scarcity'], ['Comparison', 'Comparison'], ['Pricing Table', 'Pricing Table'],
+  ['Timeline / Schedule', 'Timeline'], ['Team / Instructor', 'Team'],
 ];
 
 export const lpPlatforms = ['Scalev', 'Lynk.id', 'WordPress (Elementor/Divi)', 'Shopify'];

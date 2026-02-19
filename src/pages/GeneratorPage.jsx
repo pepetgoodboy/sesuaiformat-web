@@ -5,7 +5,7 @@ import Toast from '../components/Toast';
 import ConfirmDialog from '../components/ConfirmDialog';
 
 import {
-  brandColorOptions, designStyleOptions, themeOverrideOptions,
+  brandColorOptions, designStyleOptions, themeOverrideOptions, shortThemeOverrideOptions,
   frameworkOptions, toneOptions, categoryOptions, goalOptions, awarenessOptions, targetOptions, ctaOptions, scarcityOptions, heroTypeOptions, lpSectionItems, lpPlatforms,
   webTypeOptions, webHeroStyleOptions, webPageStructureOptions, webTargetOptions, webToneOptions, webNavStyles, webSectionItems, webFunctionalItems, webPlatforms,
   bioLayoutOptions, bioPhotoShapes, bioBgTypeOptions, bioBtnShapes, bioAnimOptions, bioFontOptions, bioPlatforms,
@@ -147,8 +147,9 @@ const GeneratorPage = () => {
   /* ── handlers ── */
   const handleLp = (e) => {
     const { id, name, value, type, checked } = e.target;
-    if (type === 'checkbox' && e.target.classList.contains('section-checkbox')) {
-      setLpData(prev => ({ ...prev, sections: checked ? [...prev.sections, value] : prev.sections.filter(s => s !== value) }));
+    const group = e.target.dataset.group;
+    if (type === 'checkbox' && group) {
+      setLpData(prev => ({ ...prev, [group]: checked ? [...prev[group], value] : prev[group].filter(s => s !== value) }));
     } else if (type === 'checkbox') {
       setLpData(prev => ({ ...prev, [id]: checked }));
     } else if (type === 'radio') {
@@ -160,10 +161,9 @@ const GeneratorPage = () => {
 
   const handleWeb = (e) => {
     const { id, name, value, type, checked } = e.target;
-    if (type === 'checkbox' && e.target.classList.contains('section-checkbox-web')) {
-      setWebData(prev => ({ ...prev, web_sections: checked ? [...prev.web_sections, value] : prev.web_sections.filter(s => s !== value) }));
-    } else if (type === 'checkbox' && e.target.classList.contains('section-checkbox-web-func')) {
-      setWebData(prev => ({ ...prev, web_functionals: checked ? [...prev.web_functionals, value] : prev.web_functionals.filter(s => s !== value) }));
+    const group = e.target.dataset.group;
+    if (type === 'checkbox' && group) {
+      setWebData(prev => ({ ...prev, [group]: checked ? [...prev[group], value] : prev[group].filter(s => s !== value) }));
     } else if (type === 'radio') {
       setWebData(prev => ({ ...prev, [name]: value }));
     } else {
@@ -208,7 +208,7 @@ const GeneratorPage = () => {
   const validateBio = () => {
     const d = bioData;
     let valid = true;
-    if (!d.bio_name || !d.bio_design_style || !d.bio_brand_color) valid = false;
+    if (!d.bio_name || !d.bio_role || !d.bio_desc || !d.bio_design_style || !d.bio_brand_color || !d.bio_links) valid = false;
     if (d.bio_brand_color === 'custom' && !d.bio_color_custom.trim()) valid = false;
     return valid;
   };
@@ -278,7 +278,7 @@ const GeneratorPage = () => {
     const text = getFullPrompt();
     if (text.includes('Lengkapi formulir') || text.includes('Sedang meracik') || text.includes('Pilih jenis')) return;
     const encoded = encodeURIComponent(text);
-    window.open(`https://chat.z.ai/?q=${encoded}`, '_blank');
+    window.open(`https://chat.openai.com/?q=${encoded}`, '_blank');
   };
 
   /* ── reset ── */
@@ -427,42 +427,39 @@ const GeneratorPage = () => {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
                 </span>
-                {currentMode === 'landing-page' && 'Landing Page Mode'}
-                {currentMode === 'website' && 'Website Mode'}
-                {currentMode === 'link-bio' && 'Link Bio Mode'}
+                {currentMode === 'landing-page' && 'Landing Page Builder'}
+                {currentMode === 'website' && 'Website Builder'}
+                {currentMode === 'link-bio' && 'Link Bio Builder'}
               </div>
 
               {currentMode === 'landing-page' && (
                 <>
                   <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.15] text-slate-900 dark:text-white">
                     Buat Landing Page professional cuman dalam<br className="hidden md:block" />
-                    <span className="bg-gradient-to-r from-orange-500 to-orange-400 bg-clip-text text-transparent"> Hitungan menit</span>
-                    <span className="inline-block animate-[float_3s_ease-in-out_infinite] ml-2">&#9889;</span>
+                    <span className="text-gradient"> Hitungan menit</span>
                   </h1>
                   <p className="text-lg md:text-xl leading-relaxed max-w-2xl mx-auto font-light text-slate-600 dark:text-slate-400">
-                    Generate Landing Page dari format yang benar, Karena landing page yang gagal biasanya bukan salah katanya, tapi salah strukturnya.
+                    Generate Landing Page dari format yang benar.
                   </p>
                 </>
               )}
               {currentMode === 'website' && (
                 <>
                   <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.15] text-slate-900 dark:text-white">
-                    Buat Website profesional yang<br className="hidden md:block" />
-                    <span className="bg-gradient-to-r from-orange-500 to-orange-400 bg-clip-text text-transparent"> mewakili brand Anda</span>
+                    Bangun Website Impian <span className="text-gradient">Tanpa Ribet</span>
                   </h1>
                   <p className="text-lg md:text-xl leading-relaxed max-w-2xl mx-auto font-light text-slate-600 dark:text-slate-400">
-                    Susun struktur Company Profile atau Portfolio yang profesional, kredibel, dan siap diimplementasikan.
+                    Struktur yang rapi bikin brandmu kelihatan profesional.
                   </p>
                 </>
               )}
               {currentMode === 'link-bio' && (
                 <>
                   <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.15] text-slate-900 dark:text-white">
-                    Buat Link Bio yang<br className="hidden md:block" />
-                    <span className="bg-gradient-to-r from-orange-500 to-orange-400 bg-clip-text text-transparent"> eye-catching &amp; modern</span>
+                    Bio Page yang Bikin Pengunjung <span className="text-gradient">Klik Terus</span>
                   </h1>
                   <p className="text-lg md:text-xl leading-relaxed max-w-2xl mx-auto font-light text-slate-600 dark:text-slate-400">
-                    Desain micro-site link in bio yang profesional, estetik, dan mencerminkan personal brand Anda.
+                    Jangan biarkan linkmu tersesat.
                   </p>
                 </>
               )}
@@ -472,13 +469,13 @@ const GeneratorPage = () => {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
               {/* ──────── LEFT COLUMN: FORMS ──────── */}
-              <section className="lg:col-span-7 space-y-8 animate-[fadeIn_0.5s_ease-out]">
+              <section className="lg:col-span-7 animate-fade-in">
 
                 {/* ═══════════════════════════════════════
                    LANDING PAGE FORM
                    ═══════════════════════════════════════ */}
                 {currentMode === 'landing-page' && (
-                  <>
+                  <div className="space-y-8">
                     {/* LP Section 1 - Framework & Tone */}
                     <div className={cardClass}>
                       <div className="flex items-center gap-4 mb-8">
@@ -622,12 +619,10 @@ const GeneratorPage = () => {
                         </div>
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        {lpSectionItems.map(sec => (
-                          <div key={sec} className="relative group">
-                            <input type="checkbox" id={`sec_${sec}`} value={sec} onChange={handleLp} checked={lpData.sections.includes(sec)} className="hidden section-checkbox peer" />
-                            <label htmlFor={`sec_${sec}`} className="flex flex-col items-center justify-center text-center text-xs font-bold h-14 rounded-xl border cursor-pointer transition-all select-none border-slate-200 bg-white text-slate-600 hover:border-orange-500/50 peer-checked:bg-orange-50 peer-checked:border-orange-500 peer-checked:text-orange-700 dark:border-[#2d294a] dark:bg-[#0f121e] dark:text-slate-400 dark:peer-checked:bg-orange-600 dark:peer-checked:border-orange-500 dark:peer-checked:text-white">
-                              {sec}
-                            </label>
+                        {lpSectionItems.map(([val, lbl]) => (
+                          <div key={val} className="relative group">
+                            <input type="checkbox" id={`sec_${val}`} value={val} checked={lpData.sections.includes(val)} onChange={handleLp} className="hidden section-checkbox" data-group="sections" />
+                            <label htmlFor={`sec_${val}`} className="flex flex-col items-center justify-center text-center text-xs font-bold h-14 rounded-xl cursor-pointer select-none">{lbl}</label>
                           </div>
                         ))}
                       </div>
@@ -645,18 +640,6 @@ const GeneratorPage = () => {
                       <div className="space-y-5">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                           <div className="space-y-2">
-                            <label className={labelClass}>Hero Type</label>
-                            <FlatSelect id="hero_type" value={lpData.hero_type} onChange={handleLp} options={heroTypeOptions} className={selectClass} />
-                          </div>
-                          <div className="space-y-2 flex items-end">
-                            <label className="flex items-center gap-3 cursor-pointer pb-3">
-                              <input type="checkbox" id="sticky_mobile" checked={lpData.sticky_mobile} onChange={handleLp} className="w-5 h-5 rounded border-slate-300 text-orange-500 focus:ring-orange-500" />
-                              <span className={labelClass}>Sticky Mobile CTA</span>
-                            </label>
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                          <div className="space-y-2">
                             <label className={labelClass}>Warna Brand <span className="text-orange-500">*</span></label>
                             <GroupedSelect id="brand_color" value={lpData.brand_color} onChange={handleLp} options={brandColorOptions} className={selectClass} />
                             {lpData.brand_color === 'custom' && (
@@ -668,9 +651,21 @@ const GeneratorPage = () => {
                             <FlatSelect id="theme_override" value={lpData.theme_override} onChange={handleLp} options={themeOverrideOptions} className={selectClass} />
                           </div>
                         </div>
-                        <div className="space-y-2">
-                          <label className={labelClass}>Gaya Desain <span className="text-orange-500">*</span></label>
-                          <GroupedSelect id="design_style" value={lpData.design_style} onChange={handleLp} options={designStyleOptions} className={selectClass} />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                          <div className="space-y-2">
+                            <label className={labelClass}>Gaya Desain <span className="text-orange-500">*</span></label>
+                            <GroupedSelect id="design_style" value={lpData.design_style} onChange={handleLp} options={designStyleOptions} className={selectClass} />
+                          </div>
+                          <div className="space-y-2">
+                            <label className={labelClass}>Hero Section Type</label>
+                            <FlatSelect id="hero_type" value={lpData.hero_type} onChange={handleLp} options={heroTypeOptions} className={selectClass} />
+                          </div>
+                        </div>
+                        <div className="space-y-2 flex items-end">
+                          <label className="flex items-center gap-3 cursor-pointer pb-3">
+                            <input type="checkbox" id="sticky_mobile" checked={lpData.sticky_mobile} onChange={handleLp} className="w-5 h-5 rounded border-slate-300 text-orange-500 focus:ring-orange-500" />
+                            <span className={labelClass}>Sticky Mobile CTA</span>
+                          </label>
                         </div>
                       </div>
                     </div>
@@ -684,7 +679,7 @@ const GeneratorPage = () => {
                           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Pilih platform deploy.</p>
                         </div>
                       </div>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                         {lpPlatforms.map(p => (
                           <div key={p} className="relative">
                             <input type="radio" name="platform" id={`lp_plt_${p}`} value={p} checked={lpData.platform === p} onChange={handleLp} className="hidden peer" />
@@ -695,14 +690,14 @@ const GeneratorPage = () => {
                         ))}
                       </div>
                     </div>
-                  </>
+                  </div>
                 )}
 
                 {/* ═══════════════════════════════════════
                    WEBSITE FORM
                    ═══════════════════════════════════════ */}
                 {currentMode === 'website' && (
-                  <>
+                  <div className="space-y-8">
                     {/* Web Section 1 - Identitas Website */}
                     <div className={cardClass}>
                       <div className="flex items-center gap-4 mb-8">
@@ -736,6 +731,10 @@ const GeneratorPage = () => {
                             <input type="text" id="web_seo" value={webData.web_seo} onChange={handleWeb} placeholder="Keyword utama (pisahkan koma)" className={inputClass} />
                           </div>
                         </div>
+                        <div className="space-y-2">
+                          <label className={labelClass}>Deskripsi Singkat <span className="text-orange-500">*</span></label>
+                          <textarea id="web_desc" rows="4" value={webData.web_desc} onChange={handleWeb} placeholder="Jelaskan brand / bisnis Anda secara detail..." className={inputClass}></textarea>
+                        </div>
                       </div>
                     </div>
 
@@ -749,17 +748,25 @@ const GeneratorPage = () => {
                         </div>
                       </div>
                       <div className="space-y-5">
-                        <div className="space-y-2">
-                          <label className={labelClass}>Deskripsi Brand <span className="text-orange-500">*</span></label>
-                          <textarea id="web_desc" rows="4" value={webData.web_desc} onChange={handleWeb} placeholder="Jelaskan brand / bisnis Anda secara detail..." className={inputClass}></textarea>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                          <div className="space-y-2">
+                            <label className={labelClass}>Masalah Klien</label>
+                            <textarea id="web_problem" rows="3" value={webData.web_problem} onChange={handleWeb} placeholder="Masalah apa yang brand Anda selesaikan?" className={inputClass}></textarea>
+                          </div>
+                          <div className="space-y-2">
+                            <label className={labelClass}>Solusi Anda</label>
+                            <textarea id="web_solution" rows="3" value={webData.web_solution} onChange={handleWeb} placeholder="Solusi apa yang Anda tawarkan?" className={inputClass}></textarea>
+                          </div>
                         </div>
-                        <div className="space-y-2">
-                          <label className={labelClass}>Masalah yang Diselesaikan</label>
-                          <textarea id="web_problem" rows="3" value={webData.web_problem} onChange={handleWeb} placeholder="Masalah apa yang brand Anda selesaikan?" className={inputClass}></textarea>
-                        </div>
-                        <div className="space-y-2">
-                          <label className={labelClass}>Solusi yang Ditawarkan</label>
-                          <textarea id="web_solution" rows="3" value={webData.web_solution} onChange={handleWeb} placeholder="Solusi apa yang Anda tawarkan?" className={inputClass}></textarea>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                          <div className="space-y-2">
+                            <label className={labelClass}>Gaya Hero Section</label>
+                            <FlatSelect id="web_hero_style" value={webData.web_hero_style} onChange={handleWeb} options={webHeroStyleOptions} className={selectClass} />
+                          </div>
+                          <div className="space-y-2">
+                            <label className={labelClass}>Struktur Halaman</label>
+                            <FlatSelect id="web_page_structure" value={webData.web_page_structure} onChange={handleWeb} options={webPageStructureOptions} className={selectClass} />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -770,18 +777,10 @@ const GeneratorPage = () => {
                         <span className="step-badge w-10 h-10 rounded-xl flex items-center justify-center text-lg font-bold">3</span>
                         <div>
                           <h2 className="text-xl font-bold text-slate-900 dark:text-white">Audiens & Gaya Bahasa</h2>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Hero style, struktur, target, dan tone.</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Target pengunjung dan tone.</p>
                         </div>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <div className="space-y-2">
-                          <label className={labelClass}>Hero Style</label>
-                          <FlatSelect id="web_hero_style" value={webData.web_hero_style} onChange={handleWeb} options={webHeroStyleOptions} className={selectClass} />
-                        </div>
-                        <div className="space-y-2">
-                          <label className={labelClass}>Struktur Halaman</label>
-                          <FlatSelect id="web_page_structure" value={webData.web_page_structure} onChange={handleWeb} options={webPageStructureOptions} className={selectClass} />
-                        </div>
                         <div className="space-y-2">
                           <label className={labelClass}>Target Pengunjung</label>
                           <FlatSelect id="web_target" value={webData.web_target} onChange={handleWeb} options={webTargetOptions} className={selectClass} />
@@ -804,16 +803,16 @@ const GeneratorPage = () => {
                       <div className="flex items-center gap-4 mb-8">
                         <span className="step-badge w-10 h-10 rounded-xl flex items-center justify-center text-lg font-bold">4</span>
                         <div>
-                          <h2 className="text-xl font-bold text-slate-900 dark:text-white">Brand Assets & Sosial Media</h2>
+                          <h2 className="text-xl font-bold text-slate-900 dark:text-white">Brand Assets & Socials</h2>
                           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">USP, tahun berdiri, dan link sosial media.</p>
                         </div>
                       </div>
                       <div className="space-y-5">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                          <div className="space-y-2">
-                            <label className={labelClass}>USP (Unique Selling Proposition)</label>
-                            <input type="text" id="web_usp" value={webData.web_usp} onChange={handleWeb} placeholder="Apa keunikan brand Anda?" className={inputClass} />
-                          </div>
+                        <div className="space-y-2">
+                          <label className={labelClass}>USP (Unique Selling Proposition)</label>
+                          <textarea id="web_usp" rows="2" value={webData.web_usp} onChange={handleWeb} placeholder="Apa keunikan brand Anda?" className={inputClass}></textarea>
+                        </div>
+                        <div className="grid grid-cols-1 gap-5">
                           <div className="space-y-2">
                             <label className={labelClass}>Tahun Berdiri</label>
                             <input type="text" id="web_year" value={webData.web_year} onChange={handleWeb} placeholder="Contoh: 2020" className={inputClass} />
@@ -847,13 +846,15 @@ const GeneratorPage = () => {
                           <label className={labelClass}>Layanan Utama</label>
                           <textarea id="web_services" rows="3" value={webData.web_services} onChange={handleWeb} placeholder="List layanan / produk utama..." className={inputClass}></textarea>
                         </div>
-                        <div className="space-y-2">
-                          <label className={labelClass}>Info Kontak</label>
-                          <textarea id="web_contact" rows="3" value={webData.web_contact} onChange={handleWeb} placeholder="Alamat, telepon, email..." className={inputClass}></textarea>
-                        </div>
-                        <div className="space-y-2">
-                          <label className={labelClass}>Primary CTA</label>
-                          <input type="text" id="web_cta" value={webData.web_cta} onChange={handleWeb} placeholder="Contoh: Hubungi Kami" className={inputClass} />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                          <div className="space-y-2">
+                            <label className={labelClass}>Info Kontak</label>
+                            <input type="text" id="web_contact" value={webData.web_contact} onChange={handleWeb} placeholder="Alamat, telepon, email..." className={inputClass} />
+                          </div>
+                          <div className="space-y-2">
+                            <label className={labelClass}>Primary CTA</label>
+                            <input type="text" id="web_cta" value={webData.web_cta} onChange={handleWeb} placeholder="Contoh: Hubungi Kami" className={inputClass} />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -896,6 +897,7 @@ const GeneratorPage = () => {
                                   checked={item.locked ? true : webData.web_sections.includes(item.id)}
                                   disabled={item.locked}
                                   className="hidden section-checkbox-web peer"
+                                  data-group="web_sections"
                                 />
                                 <label htmlFor={`wsec_${item.id}`} className={`flex flex-col items-center justify-center text-center text-xs font-bold h-14 rounded-xl border cursor-pointer transition-all select-none border-slate-200 bg-white text-slate-600 hover:border-orange-500/50 peer-checked:bg-orange-50 peer-checked:border-orange-500 peer-checked:text-orange-700 dark:border-[#2d294a] dark:bg-[#0f121e] dark:text-slate-400 dark:peer-checked:bg-orange-600 dark:peer-checked:border-orange-500 dark:peer-checked:text-white ${item.locked ? 'opacity-60 cursor-not-allowed' : ''}`}>
                                   {item.label}{item.locked ? ' (Locked)' : ''}
@@ -916,7 +918,8 @@ const GeneratorPage = () => {
                                   value={item.id}
                                   onChange={handleWeb}
                                   checked={webData.web_functionals.includes(item.id)}
-                                  className="hidden section-checkbox-web-func peer"
+                                  className="hidden section-checkbox-web peer"
+                                  data-group="web_functionals"
                                 />
                                 <label htmlFor={`wfunc_${item.id}`} className="flex flex-col items-center justify-center text-center text-xs font-bold h-14 rounded-xl border cursor-pointer transition-all select-none border-slate-200 bg-white text-slate-600 hover:border-orange-500/50 peer-checked:bg-orange-50 peer-checked:border-orange-500 peer-checked:text-orange-700 dark:border-[#2d294a] dark:bg-[#0f121e] dark:text-slate-400 dark:peer-checked:bg-orange-600 dark:peer-checked:border-orange-500 dark:peer-checked:text-white">
                                   {item.label}
@@ -948,7 +951,7 @@ const GeneratorPage = () => {
                           </div>
                           <div className="space-y-2">
                             <label className={labelClass}>Tema Background</label>
-                            <FlatSelect id="web_theme_override" value={webData.web_theme_override} onChange={handleWeb} options={themeOverrideOptions} className={selectClass} />
+                            <FlatSelect id="web_theme_override" value={webData.web_theme_override} onChange={handleWeb} options={shortThemeOverrideOptions} className={selectClass} />
                           </div>
                         </div>
                         <div className="space-y-2">
@@ -967,7 +970,7 @@ const GeneratorPage = () => {
                           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Pilih platform deploy.</p>
                         </div>
                       </div>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         {webPlatforms.map(p => (
                           <div key={p} className="relative">
                             <input type="radio" name="web_platform" id={`web_plt_${p}`} value={p} checked={webData.web_platform === p} onChange={handleWeb} className="hidden peer" />
@@ -978,14 +981,14 @@ const GeneratorPage = () => {
                         ))}
                       </div>
                     </div>
-                  </>
+                  </div>
                 )}
 
                 {/* ═══════════════════════════════════════
                    LINK BIO FORM
                    ═══════════════════════════════════════ */}
                 {currentMode === 'link-bio' && (
-                  <>
+                  <div className="space-y-8">
                     {/* Bio Section 1 - Profil & Brand */}
                     <div className={cardClass}>
                       <div className="flex items-center gap-4 mb-8">
@@ -1002,35 +1005,60 @@ const GeneratorPage = () => {
                             <input type="text" id="bio_name" value={bioData.bio_name} onChange={handleBio} placeholder="Nama Anda / Brand" className={inputClass} />
                           </div>
                           <div className="space-y-2">
-                            <label className={labelClass}>Role / Title</label>
+                            <label className={labelClass}>Role / Title <span className="text-orange-500">*</span></label>
                             <input type="text" id="bio_role" value={bioData.bio_role} onChange={handleBio} placeholder="Contoh: Content Creator" className={inputClass} />
                           </div>
                         </div>
                         <div className="space-y-2">
-                          <label className={labelClass}>Bio Singkat</label>
+                          <label className={labelClass}>Bio Singkat <span className="text-orange-500">*</span></label>
                           <textarea id="bio_desc" rows="3" value={bioData.bio_desc} onChange={handleBio} placeholder="Deskripsikan diri Anda dalam 1-2 kalimat..." className={inputClass}></textarea>
                         </div>
                       </div>
                     </div>
 
                     {/* Bio Section 2 - Social Media Bar */}
-                    <div className={cardClass}>
-                      <div className="flex items-center gap-4 mb-8">
+                    <div className={`${cardClass} border-dashed`}>
+                      <div className="flex items-center gap-4 mb-4">
                         <span className="step-badge w-10 h-10 rounded-xl flex items-center justify-center text-lg font-bold">2</span>
                         <div>
                           <h2 className="text-xl font-bold text-slate-900 dark:text-white">Social Media Bar</h2>
                           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Link sosial media yang ditampilkan.</p>
                         </div>
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" id="bio_ig" value={bioData.bio_ig} onChange={handleBio} placeholder="Instagram URL" className={inputClass} />
-                        <input type="text" id="bio_fb" value={bioData.bio_fb} onChange={handleBio} placeholder="Facebook URL" className={inputClass} />
-                        <input type="text" id="bio_tiktok" value={bioData.bio_tiktok} onChange={handleBio} placeholder="TikTok URL" className={inputClass} />
-                        <input type="text" id="bio_x" value={bioData.bio_x} onChange={handleBio} placeholder="X (Twitter) URL" className={inputClass} />
-                        <input type="text" id="bio_threads" value={bioData.bio_threads} onChange={handleBio} placeholder="Threads URL" className={inputClass} />
-                        <input type="text" id="bio_yt" value={bioData.bio_yt} onChange={handleBio} placeholder="YouTube URL" className={inputClass} />
-                        <input type="text" id="bio_linkedin" value={bioData.bio_linkedin} onChange={handleBio} placeholder="LinkedIn URL" className={inputClass} />
-                        <input type="text" id="bio_wa" value={bioData.bio_wa} onChange={handleBio} placeholder="WhatsApp Number" className={inputClass} />
+                      <p className="text-[10px] text-slate-500 mb-4 bg-slate-100 dark:bg-white/5 p-3 rounded-lg">Opsional: Kosongkan jika tidak perlu.</p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div className="space-y-2">
+                          <label className={labelClass}>Instagram</label>
+                          <input type="text" id="bio_ig" value={bioData.bio_ig} onChange={handleBio} placeholder="@username" className={inputClass} />
+                        </div>
+                        <div className="space-y-2">
+                          <label className={labelClass}>Facebook</label>
+                          <input type="text" id="bio_fb" value={bioData.bio_fb} onChange={handleBio} placeholder="@username" className={inputClass} />
+                        </div>
+                        <div className="space-y-2">
+                          <label className={labelClass}>TikTok</label>
+                          <input type="text" id="bio_tiktok" value={bioData.bio_tiktok} onChange={handleBio} placeholder="@username" className={inputClass} />
+                        </div>
+                        <div className="space-y-2">
+                          <label className={labelClass}>X / Twitter</label>
+                          <input type="text" id="bio_x" value={bioData.bio_x} onChange={handleBio} placeholder="@username" className={inputClass} />
+                        </div>
+                        <div className="space-y-2">
+                          <label className={labelClass}>Threads</label>
+                          <input type="text" id="bio_threads" value={bioData.bio_threads} onChange={handleBio} placeholder="@username" className={inputClass} />
+                        </div>
+                        <div className="space-y-2">
+                          <label className={labelClass}>YouTube</label>
+                          <input type="text" id="bio_yt" value={bioData.bio_yt} onChange={handleBio} placeholder="@username" className={inputClass} />
+                        </div>
+                        <div className="space-y-2">
+                          <label className={labelClass}>LinkedIn</label>
+                          <input type="text" id="bio_linkedin" value={bioData.bio_linkedin} onChange={handleBio} placeholder="@username" className={inputClass} />
+                        </div>
+                        <div className="space-y-2">
+                          <label className={labelClass}>WhatsApp</label>
+                          <input type="text" id="bio_wa" value={bioData.bio_wa} onChange={handleBio} placeholder="@username" className={inputClass} />
+                        </div>
                       </div>
                     </div>
 
@@ -1053,8 +1081,14 @@ const GeneratorPage = () => {
                           <input type="text" id="bio_main_link" value={bioData.bio_main_link} onChange={handleBio} placeholder="Link utama yang di-highlight" className={inputClass} />
                         </div>
                         <div className="space-y-2">
-                          <label className={labelClass}>List Link</label>
-                          <textarea id="bio_links" rows="5" value={bioData.bio_links} onChange={handleBio} placeholder="Satu link per baris..." className={inputClass}></textarea>
+                          <label className={labelClass}>List Link <span className="text-orange-500">*</span></label>
+                          <div className="mb-3 p-3 bg-slate-100 dark:bg-white/5 rounded-xl border border-dashed border-slate-300 dark:border-white/10 text-[11px] text-slate-500 leading-relaxed">
+                            <span className="font-bold text-orange-500">CONTOH PENGISIAN:</span><br />
+                            Katalog Produk : https://website.com/katalog<br />
+                            Admin WhatsApp : https://wa.me/62812xxx<br />
+                            Join Telegram : https://t.me/channel
+                          </div>
+                          <textarea id="bio_links" rows="5" value={bioData.bio_links} onChange={handleBio} placeholder="Satu link per baris..." className={`${inputClass} font-mono text-xs`}></textarea>
                         </div>
                       </div>
                     </div>
@@ -1128,35 +1162,36 @@ const GeneratorPage = () => {
                           </div>
                           <div className="space-y-2">
                             <label className={labelClass}>Tema Background</label>
-                            <FlatSelect id="bio_theme_override" value={bioData.bio_theme_override} onChange={handleBio} options={themeOverrideOptions} className={selectClass} />
+                            <FlatSelect id="bio_theme_override" value={bioData.bio_theme_override} onChange={handleBio} options={shortThemeOverrideOptions} className={selectClass} />
                           </div>
-                        </div>
-                        <div className="space-y-2">
-                          <label className={labelClass}>Gaya Desain <span className="text-orange-500">*</span></label>
-                          <GroupedSelect id="bio_design_style" value={bioData.bio_design_style} onChange={handleBio} options={designStyleOptions} className={selectClass} />
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                           <div className="space-y-2">
-                            <label className={labelClass}>Animasi Tombol</label>
-                            <FlatSelect id="bio_anim" value={bioData.bio_anim} onChange={handleBio} options={bioAnimOptions} className={selectClass} />
+                            <label className={labelClass}>Gaya Desain <span className="text-orange-500">*</span></label>
+                            <GroupedSelect id="bio_design_style" value={bioData.bio_design_style} onChange={handleBio} options={designStyleOptions} className={selectClass} />
                           </div>
                           <div className="space-y-2">
-                            <label className={labelClass}>Gaya Font</label>
-                            <FlatSelect id="bio_font" value={bioData.bio_font} onChange={handleBio} options={bioFontOptions} className={selectClass} />
+                            <label className={labelClass}>Animasi Tombol <span className="text-orange-500">*</span></label>
+                            <FlatSelect id="bio_anim" value={bioData.bio_anim} onChange={handleBio} options={bioAnimOptions} className={selectClass} />
                           </div>
+                        </div>
+                        <div className="space-y-2">
+                          <label className={labelClass}>Jenis Font (Typography) <span className="text-orange-500">*</span></label>
+                          <FlatSelect id="bio_font" value={bioData.bio_font} onChange={handleBio} options={bioFontOptions} className={selectClass} />
                         </div>
                       </div>
                     </div>
 
                     {/* Bio Section 6 - Featured Content */}
-                    <div className={cardClass}>
-                      <div className="flex items-center gap-4 mb-8">
+                    <div className={`${cardClass} border-dashed`}>
+                      <div className="flex items-center gap-4 mb-4">
                         <span className="step-badge w-10 h-10 rounded-xl flex items-center justify-center text-lg font-bold">6</span>
                         <div>
-                          <h2 className="text-xl font-bold text-slate-900 dark:text-white">Featured Content</h2>
+                          <h2 className="text-xl font-bold text-slate-900 dark:text-white">Featured Content (Opsional)</h2>
                           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Widget dan konten tambahan.</p>
                         </div>
                       </div>
+                      <p className="text-[10px] text-slate-500 mb-4 bg-slate-100 dark:bg-white/5 p-3 rounded-lg">Kosongkan jika tidak perlu.</p>
                       <div className="space-y-5">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                           <div className="space-y-2">
@@ -1176,10 +1211,10 @@ const GeneratorPage = () => {
                             <input type="text" id="bio_donation" value={bioData.bio_donation} onChange={handleBio} placeholder="Teks untuk tombol donasi" className={inputClass} />
                           </div>
                         </div>
-                        <label className="flex items-center gap-3 cursor-pointer">
-                          <input type="checkbox" id="bio_contact_form" checked={bioData.bio_contact_form} onChange={handleBio} className="w-5 h-5 rounded border-slate-300 text-orange-500 focus:ring-orange-500" />
-                          <span className={labelClass}>Tampilkan Contact Form</span>
-                        </label>
+                        <div className="mt-4 relative group">
+                          <input type="checkbox" id="bio_contact_form" value="Contact Form" checked={bioData.bio_contact_form} onChange={handleBio} className="hidden section-checkbox-bio" />
+                          <label htmlFor="bio_contact_form" className="flex flex-col items-center justify-center text-center text-xs font-bold h-12 rounded-xl cursor-pointer select-none">Tambahkan Form Kontak Langsung</label>
+                        </div>
                       </div>
                     </div>
 
@@ -1203,7 +1238,7 @@ const GeneratorPage = () => {
                         ))}
                       </div>
                     </div>
-                  </>
+                  </div>
                 )}
 
                 {/* ══════════ VALIDATION + BUTTONS ══════════ */}
@@ -1226,7 +1261,11 @@ const GeneratorPage = () => {
                       </>
                     ) : (
                       <>
-                        <span>Generate Prompt</span>
+                        <span>
+                          {currentMode === 'landing-page' && 'Generate Prompt'}
+                          {currentMode === 'website' && 'Generate Website Prompt'}
+                          {currentMode === 'link-bio' && 'Generate Bio Prompt'}
+                        </span>
                         <svg className="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                       </>
                     )}
@@ -1236,7 +1275,7 @@ const GeneratorPage = () => {
 
               {/* ──────── RIGHT COLUMN: OUTPUT ──────── */}
               <section className="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-4 animate-[fadeIn_0.5s_ease-out]">
-                <div className="rounded-[2.5rem] p-1 shadow-2xl flex flex-col h-[750px] border transition-all duration-300 border-slate-200 bg-white dark:border-white/10 dark:bg-gray-900/50 backdrop-blur-xl">
+                <div className="rounded-[2.5rem] p-1 shadow-2xl flex flex-col h-[750px] border transition-all duration-300 border-white/40 bg-white dark:border-white/10 dark:bg-gray-900/50 backdrop-blur-xl">
                   {/* Header */}
                   <div className="flex items-center justify-between px-8 py-6 border-b rounded-t-[2.3rem] border-slate-200 bg-slate-50 dark:border-white/5 dark:bg-white/5">
                     <div className="flex flex-col">
@@ -1260,9 +1299,7 @@ const GeneratorPage = () => {
                   <div className="w-full p-4 bg-white dark:bg-transparent rounded-b-[2.3rem]">
                     <button onClick={goToGPT} className="bg-orange-500 text-white border border-transparent hover:shadow-[0_0_20px_rgba(249,115,22,0.6)] hover:scale-105 transition-all duration-300 text-xs px-5 py-2.5 rounded-2xl font-bold w-full flex items-center gap-2 justify-center cursor-pointer">
                       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                      {currentMode === 'landing-page' && 'Buat Landing Page Sekarang'}
-                      {currentMode === 'website' && 'Buat Website Sekarang'}
-                      {currentMode === 'link-bio' && 'Buat Link Bio Sekarang'}
+                      Buat di AI
                     </button>
                   </div>
                 </div>
