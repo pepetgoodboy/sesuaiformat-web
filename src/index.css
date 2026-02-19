@@ -1,0 +1,305 @@
+@import "tailwindcss";
+
+@variant dark (&:where(.dark, .dark *));
+
+
+@theme {
+    --color-brand-orange: #F97316;
+    --color-brand-dark: #0B0F19;
+    --color-brand-card: #111827;
+    --color-brand-border: #1F2937;
+
+    --font-display: "Outfit", sans-serif;
+    --font-body: "Plus Jakarta Sans", sans-serif;
+
+    --animate-fade-in: fadeIn 0.5s ease-out;
+    --animate-slide-up: slideUp 0.6s ease-out forwards;
+    --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    --animate-float: float 3s ease-in-out infinite;
+
+    --ease-spring: cubic-bezier(0.4, 0, 0.6, 1);
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideUp {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes float {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+}
+
+/* Theme Variables */
+:root {
+    --bg-page: var(--color-brand-dark);
+    --text-main: #e2e8f0;
+    --text-muted: #94a3b8;
+
+    --input-bg: rgba(3, 7, 18, 0.6);
+    --input-border: #1f2937;
+    --input-text: #f1f5f9;
+    --input-placeholder: #475569;
+    --input-icon: #64748b;
+
+    --card-bg: rgba(17, 24, 39, 0.7);
+    --card-border: rgba(255, 255, 255, 0.08);
+
+    --selection-bg: #0f121e;
+    --selection-border: #2d294a;
+}
+
+[data-theme="light"] {
+    --bg-page: #f3f4f6;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+
+    --input-bg: #ffffff;
+    --input-border: #cbd5e1;
+    --input-text: #0f172a;
+    --input-placeholder: #94a3b8;
+    --input-icon: #64748b;
+
+    --card-bg: rgba(255, 255, 255, 0.85);
+    --card-border: rgba(0, 0, 0, 0.05);
+
+    --selection-bg: #ffffff;
+    --selection-border: #e2e8f0;
+}
+
+/* Base Styles */
+body {
+    background-color: var(--bg-page);
+    color: var(--text-main);
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Glassmorphism Utilities */
+.glass-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+    border-color: rgba(249, 115, 22, 0.3);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 0 20px rgba(249, 115, 22, 0.05);
+}
+
+.glass-nav {
+    background: rgba(11, 15, 25, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+[data-theme="light"] .glass-nav {
+    background: rgba(255, 255, 255, 0.9);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Form Input Utility */
+.form-input {
+    width: 100%;
+    border-radius: 0.75rem;
+    /* rounded-xl */
+    padding-left: 3rem;
+    /* pl-12 */
+    padding-right: 1rem;
+    /* pr-4 */
+    padding-top: 0.875rem;
+    /* py-3.5 */
+    padding-bottom: 0.875rem;
+    font-size: 0.875rem;
+    /* text-sm */
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--input-text);
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.form-input::placeholder {
+    color: var(--input-placeholder);
+}
+
+.form-input:focus {
+    border-color: var(--color-brand-orange);
+    background-color: var(--input-bg);
+    /* Keep transparent/solid as defined */
+}
+
+/* Form Icon Utility */
+.form-icon {
+    color: var(--input-icon);
+}
+
+.group:focus-within .form-icon {
+    color: var(--color-brand-orange);
+}
+
+/* Custom Component Classes */
+.btn-gradient {
+    background: linear-gradient(90deg, var(--color-brand-orange) 0%, #ea580c 100%);
+    background-size: 200% auto;
+    transition: all 0.5s ease;
+}
+
+.btn-gradient:hover {
+    background-position: right center;
+    box-shadow: 0 0 20px rgba(249, 115, 22, 0.4);
+}
+
+.step-badge {
+    background: linear-gradient(135deg, var(--color-brand-orange) 0%, #c2410c 100%);
+}
+
+.text-gradient {
+    background: linear-gradient(to right, var(--color-brand-orange), #fb923c, #ffffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% auto;
+}
+
+/* Custom Select Dropdown Styling */
+select {
+    background-image: none !important;
+    /* Remove default arrow */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* Webkit browsers (Chrome, Safari) */
+select optgroup {
+    color: var(--color-brand-orange);
+    font-weight: 800;
+    font-family: var(--font-body);
+    font-size: 13px;
+    /* Smaller text like image */
+    background-color: var(--input-bg);
+}
+
+select option {
+    color: var(--input-text);
+    background-color: var(--input-bg);
+    padding: 10px;
+    font-weight: 500;
+}
+
+/* Light Mode Specifics for Dropdown */
+[data-theme="light"] select optgroup {
+    background-color: #ffffff;
+    color: #ea580c;
+    /* Darker orange for better contrast on white */
+}
+
+[data-theme="light"] select option {
+    background-color: #ffffff;
+    color: #1f2937;
+}
+
+/* Dark Mode Specifics for Dropdown */
+[data-theme="dark"] select optgroup {
+    background-color: #111827;
+    /* Darker bg for dropdown */
+    color: #fb923c;
+}
+
+[data-theme="dark"] select option {
+    background-color: #111827;
+    color: #f3f4f6;
+}
+
+/* Checkbox & Radio Card Styling */
+.section-checkbox + label,
+.section-checkbox-web + label,
+.section-checkbox-bio + label {
+    background-color: var(--selection-bg);
+    border: 1px solid var(--selection-border);
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+}
+
+.section-checkbox + label:hover,
+.section-checkbox-web + label:hover,
+.section-checkbox-bio + label:hover {
+    border-color: rgba(249, 115, 22, 0.5);
+    color: var(--text-main);
+}
+
+.section-checkbox:checked + label,
+.section-checkbox-web:checked + label,
+.section-checkbox-bio:checked + label {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    border-color: #f97316;
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+}
+
+/* Selection Card Hover */
+.selection-card {
+    transition: all 0.3s ease;
+}
+
+.selection-card:hover {
+    border-color: rgba(249, 115, 22, 0.5);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(249, 115, 22, 0.1);
+}
+
+/* Loading Overlay */
+.progress-track {
+    width: 200px;
+    height: 4px;
+    background: var(--input-border);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #f97316, #ea580c);
+    transition: width 0.1s linear;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-page); }
+::-webkit-scrollbar-thumb { background: #64748b; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+/* Spinner */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner { animation: spin 1s linear infinite; }

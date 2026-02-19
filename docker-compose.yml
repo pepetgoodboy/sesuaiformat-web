@@ -1,0 +1,14 @@
+services:
+  sesuaiformat-web:
+    container_name: sesuaiformat-web
+    build: .
+    image: sesuaiformat-web:1.0.0
+    env_file:
+     - .env
+    restart: unless-stopped
+    networks:
+     - pepet-network
+
+networks:
+  pepet-network:
+    external: true
